@@ -27,11 +27,12 @@ import (
 	"syscall"
 	"time"
 
-	docopt "github.com/docopt/docopt-go"
-	ini "github.com/vaughan0/go-ini"
+	"github.com/docopt/docopt-go"
+	"github.com/vaughan0/go-ini"
 
 	"github.com/fatedier/frp/client"
 	"github.com/fatedier/frp/models/config"
+	"github.com/fatedier/frp/utils/crypto"
 	"github.com/fatedier/frp/utils/log"
 	"github.com/fatedier/frp/utils/version"
 )
@@ -80,6 +81,16 @@ func main() {
 		os.Exit(1)
 	}
 	config.ClientCommonCfg.ConfigFile = confFile
+
+	if config.ClientCommonCfg.CustomerCode == "" || config.ClientCommonCfg.License == "" {
+		fmt.Println("customer_code and license field in are necessary!")
+		os.Exit(1)
+	}
+
+	if err = crypto.Verify(config.ClientCommonCfg.CustomerCode, config.ClientCommonCfg.License); err != nil {
+		fmt.Println("invalid license!")
+		os.Exit(1)
+	}
 
 	// check if reload command
 	if args["--reload"] != nil {

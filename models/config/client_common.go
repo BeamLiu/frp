@@ -48,6 +48,8 @@ type ClientCommonConf struct {
 	Protocol          string
 	HeartBeatInterval int64
 	HeartBeatTimeout  int64
+	CustomerCode      string
+	License           string
 }
 
 func GetDeaultClientCommonConf() *ClientCommonConf {
@@ -227,6 +229,16 @@ func LoadClientCommonConf(conf ini.File) (cfg *ClientCommonConf, err error) {
 	if cfg.HeartBeatTimeout < cfg.HeartBeatInterval {
 		err = fmt.Errorf("Parse conf error: heartbeat_timeout is incorrect, heartbeat_timeout is less than heartbeat_interval")
 		return
+	}
+
+	tmpStr, ok = conf.Get("common", "customer_code")
+	if ok {
+		cfg.CustomerCode = tmpStr
+	}
+
+	tmpStr, ok = conf.Get("common", "license")
+	if ok {
+		cfg.License = tmpStr
 	}
 	return
 }
