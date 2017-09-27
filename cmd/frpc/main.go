@@ -38,16 +38,16 @@ import (
 )
 
 var (
-	configFile string = "./frpc.ini"
+	configFile string = "./op4mClient.ini"
 )
 
-var usage string = `frpc is the client of frp
+var usage string = `op4mClient is the client of op4m.com, visit http://www.op4m.com to obtain more information.
 
 Usage: 
-    frpc [-c config_file] [-L log_file] [--log-level=<log_level>] [--server-addr=<server_addr>]
-    frpc [-c config_file] --reload
-    frpc -h | --help
-    frpc -v | --version
+    op4mClient [-c config_file] [-L log_file] [--log-level=<log_level>] [--server-addr=<server_addr>]
+    op4mClient [-c config_file] --reload
+    op4mClient -h | --help
+    op4mClient -v | --version
 
 Options:
     -c config_file              set config file
@@ -61,7 +61,7 @@ Options:
 
 func main() {
 	var err error
-	confFile := "./frps.ini"
+	confFile := "./op4mClient.ini"
 	// the configures parsed from file will be replaced by those from command line if exist
 	args, err := docopt.Parse(usage, nil, true, version.Full(), false)
 
@@ -71,7 +71,7 @@ func main() {
 
 	conf, err := ini.LoadFile(confFile)
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println("A configuration file is necessary, please use \"op4mClient -h\" to get more information.", err)
 		os.Exit(1)
 	}
 
@@ -82,13 +82,14 @@ func main() {
 	}
 	config.ClientCommonCfg.ConfigFile = confFile
 
-	if config.ClientCommonCfg.CustomerCode == "" || config.ClientCommonCfg.License == "" {
-		fmt.Println("customer_code and license field in are necessary!")
+	if config.ClientCommonCfg.CustomerCode == "" || config.ClientCommonCfg.IntegrationKey == "" {
+		fmt.Println("customer_code and integration_key field in are necessary, please go to http://www.op4m.com to obtain necessary information.")
 		os.Exit(1)
 	}
 
-	if err = crypto.Verify(config.ClientCommonCfg.CustomerCode, config.ClientCommonCfg.License); err != nil {
-		fmt.Println("invalid license!")
+	commonConfigStr := fmt.Sprintf("%s:%d:%s", config.ClientCommonCfg.ServerAddr, config.ClientCommonCfg.ServerPort, config.ClientCommonCfg.CustomerCode)
+	if err = crypto.Verify(commonConfigStr, config.ClientCommonCfg.IntegrationKey); err != nil {
+		fmt.Println("invalid integration_key, please go to http://www.op4m.com to obtain necessary information.")
 		os.Exit(1)
 	}
 

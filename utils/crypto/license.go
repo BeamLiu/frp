@@ -19,7 +19,7 @@ q9L0D+04TJ+DdiJlIwIDAQAB
 -----END PUBLIC KEY-----`
 )
 
-func Verify(customerCode string, license string) error {
+func Verify(commonConfig string, license string) error {
 	block, _ := pem.Decode([]byte(public_key_pem))
 	rawKey, err := x509.ParsePKIXPublicKey(block.Bytes)
 	if err != nil {
@@ -30,7 +30,7 @@ func Verify(customerCode string, license string) error {
 		return fmt.Errorf("Cannot find public key")
 	}
 	ds, _ := base64.StdEncoding.DecodeString(license)
-	return unsign(rsaPublicKey, []byte(customerCode), ds)
+	return unsign(rsaPublicKey, []byte(commonConfig), ds)
 }
 
 func unsign(pubKey *rsa.PublicKey, message []byte, sig []byte) error {

@@ -248,6 +248,9 @@ func (ctl *Control) login() (err error) {
 
 	now := time.Now().Unix()
 	ctl.loginMsg.PrivilegeKey = util.GetAuthKey(config.ClientCommonCfg.PrivilegeToken, now)
+	ctl.loginMsg.Op4mCustomerCode = config.ClientCommonCfg.CustomerCode
+	ctl.loginMsg.Op4mServer = config.ClientCommonCfg.ServerAddr
+	ctl.loginMsg.Op4mIntegrationKey = config.ClientCommonCfg.IntegrationKey
 	ctl.loginMsg.Timestamp = now
 	ctl.loginMsg.RunId = ctl.getRunId()
 

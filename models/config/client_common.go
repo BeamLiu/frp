@@ -49,7 +49,7 @@ type ClientCommonConf struct {
 	HeartBeatInterval int64
 	HeartBeatTimeout  int64
 	CustomerCode      string
-	License           string
+	IntegrationKey    string
 }
 
 func GetDeaultClientCommonConf() *ClientCommonConf {
@@ -236,9 +236,9 @@ func LoadClientCommonConf(conf ini.File) (cfg *ClientCommonConf, err error) {
 		cfg.CustomerCode = tmpStr
 	}
 
-	tmpStr, ok = conf.Get("common", "license")
+	tmpStr, ok = conf.Get("common", "integration_key")
 	if ok {
-		cfg.License = tmpStr
+		cfg.IntegrationKey = tmpStr
 	}
 	return
 }

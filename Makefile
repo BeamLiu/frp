@@ -23,11 +23,11 @@ fmt:
 	go fmt ./utils/...
 	
 frps:
-	go build -o bin/frps ./cmd/frps
+	go build -o bin/op4mServer ./cmd/frps
 	@cp -rf ./assets/static ./bin
 
 frpc:
-	go build -o bin/frpc ./cmd/frpc
+	go build -o bin/op4mClient ./cmd/frpc
 
 test: gotest
 
@@ -45,8 +45,8 @@ alltest: gotest
 	cd ./tests && ./clean_test.sh && cd -
 
 clean:
-	rm -f ./bin/frpc
-	rm -f ./bin/frps
+	rm -f ./bin/op4mServer
+	rm -f ./bin/op4mClient
 	cd ./tests && ./clean_test.sh && cd -
 
 save:

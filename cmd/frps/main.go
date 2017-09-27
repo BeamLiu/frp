@@ -29,12 +29,12 @@ import (
 	"github.com/fatedier/frp/utils/version"
 )
 
-var usage string = `frps is the server of frp
+var usage string = `op4mServer is the server of op4m.com
 
 Usage: 
-    frps [-c config_file] [-L log_file] [--log-level=<log_level>] [--addr=<bind_addr>]
-    frps -h | --help
-    frps -v | --version
+    op4mServer [-c config_file] [-L log_file] [--log-level=<log_level>] [--addr=<bind_addr>]
+    op4mServer -h | --help
+    op4mServer -v | --version
 
 Options:
     -c config_file            set config file
@@ -47,7 +47,7 @@ Options:
 
 func main() {
 	var err error
-	confFile := "./frps.ini"
+	confFile := "./op4mServer.ini"
 	// the configures parsed from file will be replaced by those from command line if exist
 	args, err := docopt.Parse(usage, nil, true, version.Full(), false)
 

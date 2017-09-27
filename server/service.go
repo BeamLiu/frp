@@ -21,6 +21,7 @@ import (
 	"github.com/fatedier/frp/assets"
 	"github.com/fatedier/frp/models/config"
 	"github.com/fatedier/frp/models/msg"
+	"github.com/fatedier/frp/utils/crypto"
 	"github.com/fatedier/frp/utils/log"
 	frpNet "github.com/fatedier/frp/utils/net"
 	"github.com/fatedier/frp/utils/util"
@@ -226,9 +227,15 @@ func (svr *Service) HandleListener(l frpNet.Listener) {
 }
 
 func (svr *Service) RegisterControl(ctlConn frpNet.Conn, loginMsg *msg.Login) (err error) {
-	ctlConn.Info("client login info: ip [%s] version [%s] hostname [%s] os [%s] arch [%s]",
-		ctlConn.RemoteAddr().String(), loginMsg.Version, loginMsg.Hostname, loginMsg.Os, loginMsg.Arch)
+	ctlConn.Info("client login info: customer [%s] ip [%s] version [%s] hostname [%s] os [%s] arch [%s] integration_key [%s]", loginMsg.Op4mCustomerCode,
+		ctlConn.RemoteAddr().String(), loginMsg.Version, loginMsg.Hostname, loginMsg.Os, loginMsg.Arch, loginMsg.Op4mIntegrationKey)
 
+	//compare and verify the configuration in client, to make sure it is a valid client
+	textToVerify := fmt.Sprintf("%s:%d:%s", loginMsg.Op4mServer, config.ServerCommonCfg.BindPort, loginMsg.Op4mCustomerCode)
+	if err = crypto.Verify(textToVerify, loginMsg.Op4mIntegrationKey); err != nil {
+		fmt.Println("invalid client, cannot verify the op4m integration key.")
+		return
+	}
 	// Check client version.
 	if ok, msg := version.Compat(loginMsg.Version); !ok {
 		err = fmt.Errorf("%s", msg)

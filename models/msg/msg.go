@@ -68,14 +68,17 @@ type Message interface{}
 
 // When frpc start, client send this message to login to server.
 type Login struct {
-	Version      string `json:"version"`
-	Hostname     string `json:"hostname"`
-	Os           string `json:"os"`
-	Arch         string `json:"arch"`
-	User         string `json:"user"`
-	PrivilegeKey string `json:"privilege_key"`
-	Timestamp    int64  `json:"timestamp"`
-	RunId        string `json:"run_id"`
+	Version            string `json:"version"`
+	Hostname           string `json:"hostname"`
+	Os                 string `json:"os"`
+	Arch               string `json:"arch"`
+	User               string `json:"user"`
+	PrivilegeKey       string `json:"privilege_key"`
+	Timestamp          int64  `json:"timestamp"`
+	RunId              string `json:"run_id"`
+	Op4mCustomerCode   string `json:"op4m_customer_code"`
+	Op4mServer         string `json:"op4m_server"`
+	Op4mIntegrationKey string `json:"op4m_integration_key"`
 
 	// Some global configures.
 	PoolCount int `json:"pool_count"`
